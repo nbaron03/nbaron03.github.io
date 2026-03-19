@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nick Baron | Home</title>
+
+  <style>
+    :root {
+      --text: #f5fbff;
+      --muted: #b5c5d6;
+      --accent: #79f0ff;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      height: 100%;
+    }
+
+    body {
+      font-family: "Courier New", monospace;
+      color: var(--text);
+      background: black;
+      overflow: hidden;
+    }
+
+    .video-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: -2;
+    }
+
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: -1;
+    }
+
+    header {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      padding: 1.5rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 10;
+    }
+
+    .logo {
+      color: var(--text);
+      text-decoration: none;
+      font-size: 1.2rem;
+      letter-spacing: 0.15em;
+      text-transform: lowercase;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: var(--muted);
+      font-size: 0.95rem;
+      text-transform: lowercase;
+    }
+
+    nav a:hover {
+      color: var(--accent);
+    }
+
+    .sound-btn {
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: var(--muted);
+      padding: 0.45rem 0.8rem;
+      border-radius: 999px;
+      font-family: inherit;
+      font-size: 0.85rem;
+      cursor: pointer;
+      text-transform: lowercase;
+    }
+
+    .sound-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .hero {
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 0 1rem;
+    }
+
+    .hero-content {
+      max-width: 800px;
+    }
+
+    .eyebrow {
+      color: var(--accent);
+      font-size: 0.8rem;
+      letter-spacing: 0.2em;
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      font-size: clamp(3rem, 10vw, 7rem);
+      line-height: 0.9;
+      margin-bottom: 0.8rem;
+      text-transform: lowercase;
+    }
+
+    h2 {
+      font-size: clamp(1rem, 2.5vw, 1.4rem);
+      font-weight: normal;
+      color: var(--text);
+      margin-bottom: 1.2rem;
+      letter-spacing: 0.08em;
+      text-transform: lowercase;
+    }
+
+    .lead {
+      color: var(--muted);
+      font-size: 1rem;
+      margin-bottom: 2rem;
+      text-transform: lowercase;
+    }
+
+    .hint {
+      color: rgba(245, 251, 255, 0.6);
+      font-size: 0.8rem;
+      margin-top: 1rem;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 0.8rem 1.4rem;
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 999px;
+      text-decoration: none;
+      color: var(--text);
+      margin: 0 0.4rem;
+      background: transparent;
+      font-family: inherit;
+      font-size: 0.95rem;
+      cursor: pointer;
+      text-transform: lowercase;
+    }
+
+    .btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+  </style>
+</head>
+<body>
+
+  <video class="video-bg" autoplay muted loop playsinline>
+    <source src="elements/videoplayback.mp4" type="video/mp4">
+  </video>
+
+  <audio id="bg-music" loop>
+    <source src="elements/warmpop.mp3" type="audio/mpeg">
+  </audio>
+
+  <div class="overlay"></div>
+
+  <header>
+    <a class="logo" href="index.html">nick baron</a>
+
+    <nav>
+      <ul>
+        <li><a href="about.html">about</a></li>
+        <li><a href="projects.html">projects</a></li>
+        <li><a href="esports.html">esports</a></li>
+        <li><a href="resume.html">resume</a></li>
+      </ul>
+
+      <button class="sound-btn" id="sound-toggle">sound: off</button>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <div class="hero-content">
+      <p class="eyebrow">life × technology</p>
+      <h1>i'm nick</h1>
+      <h2>welcome to my website</h2>
+      <a class="btn" href="projects.html">enter</a>
+      <a class="btn" href="about.html">about</a>
+    </div>
+  </section>
+
+  <script>
+    const audio = document.getElementById("bg-music");
+    const soundToggle = document.getElementById("sound-toggle");
+
+    audio.volume = 0.025;
+    let audioEnabled = false;
+
+    function updateSoundButton() {
+      soundToggle.textContent = audio.paused ? "sound: off" : "sound: on";
+    }
+
+    function startAudio() {
+      if (!audioEnabled) {
+        audio.play().then(() => {
+          audioEnabled = true;
+          updateSoundButton();
+        }).catch(() => {});
+      }
+    }
+
+    function toggleAudio(event) {
+      event.stopPropagation();
+
+      if (audio.paused) {
+        audio.play().then(updateSoundButton);
+      } else {
+        audio.pause();
+        updateSoundButton();
+      }
+    }
+
+    soundToggle.addEventListener("click", toggleAudio);
+
+    document.addEventListener("click", startAudio);
+    document.addEventListener("keydown", startAudio);
+    document.addEventListener("touchstart", startAudio);
+
+    updateSoundButton();
+  </script>
+
+</body>
+</html>
