@@ -113,17 +113,16 @@
     .about-section {
       min-height: 100vh;
       padding: 8rem 2rem 3rem;
-      display: block;
     }
 
+    /* 🔥 FIXED: always single column */
     .about-content {
-    width: 100%;
-    max-width: 900px;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-    align-items: start;
+      width: 100%;
+      max-width: 900px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.6rem;
     }
 
     .about-main {
@@ -142,7 +141,7 @@
     .side-box {
       background: rgba(0, 0, 0, 0.22);
       border: 1px solid rgba(255, 255, 255, 0.12);
-      padding: 1.4rem;
+      padding: 1.6rem;
       backdrop-filter: blur(3px);
     }
 
@@ -178,20 +177,8 @@
       color: var(--accent);
       font-size: 0.8rem;
       letter-spacing: 0.2em;
-      margin-bottom: 0.9rem;
+      margin-bottom: 1.2rem;
       text-transform: uppercase;
-    }
-
-    .side-box ul {
-      list-style: none;
-    }
-
-    .side-box li {
-      color: var(--text);
-      margin-bottom: 0.7rem;
-      font-size: 0.95rem;
-      text-transform: lowercase;
-      line-height: 1.6;
     }
 
     .edu-list {
@@ -200,26 +187,26 @@
 
     .edu-item {
       display: flex;
-      align-items: flex-start;
-      gap: 1rem;
-      margin-bottom: 1.4rem;
+      align-items: center;
+      gap: 1.2rem;
+      margin-bottom: 1.6rem;
     }
 
+    /* 🔥 your large logos preserved */
     .edu-logo {
       width: 250px;
       height: 100px;
       object-fit: contain;
       filter: brightness(0.9) contrast(1.1);
-      margin-top: 2px;
       flex-shrink: 0;
     }
 
     .edu-school {
       display: block;
-      font-size: 0.98rem;
+      font-size: 1rem;
       color: var(--text);
       text-transform: lowercase;
-      margin-bottom: 0.2rem;
+      margin-bottom: 0.25rem;
     }
 
     .edu-degree {
@@ -227,7 +214,7 @@
       font-size: 0.9rem;
       color: var(--muted);
       text-transform: lowercase;
-      line-height: 1.5;
+      line-height: 1.4;
     }
 
     .typing::after {
@@ -239,11 +226,6 @@
       50% { opacity: 0; }
     }
 
-    @media (max-width: 900px) {
-      .about-content {
-        grid-template-columns: 1fr;
-      }
-    }
   </style>
 </head>
 <body>
@@ -252,21 +234,26 @@
 
   <section class="about-section">
     <div class="about-content">
+
+      <!-- ABOUT -->
       <div class="about-main">
         <h1 id="line1"></h1>
 
         <div class="about-text" id="about-text">
-          <p> i'm a software engineer focused on designing and 
-              building systems that turn complex data into useful 
-              outcomes. i'm especially passionate about raising 
-              shareholder value. 
+          <p>
+            i'm a software engineer focused on designing and 
+            building systems that turn complex data into useful 
+            outcomes. i'm especially passionate about raising 
+            shareholder value.
           </p> 
-          <p> i've previously worked in the biotech industry and 
-              in scientific research. 
+          <p>
+            i've previously worked in the biotech industry and 
+            in scientific research.
           </p>
         </div>
       </div>
 
+      <!-- EDUCATION BELOW -->
       <div class="about-side">
         <div class="side-box">
           <p class="box-title">education</p>
@@ -286,7 +273,9 @@
               <img src="elements/tuftslogo.png" class="edu-logo" alt="Tufts University logo">
               <div>
                 <span class="edu-school">tufts university</span>
-                <span class="edu-degree">master of science in bioinformatics</span>
+                <span class="edu-degree">
+                  master of science in bioinformatics
+                </span>
               </div>
             </li>
 
@@ -294,13 +283,16 @@
               <img src="elements/umainelogo.png" class="edu-logo" alt="University of Maine logo">
               <div>
                 <span class="edu-school">university of maine</span>
-                <span class="edu-degree">bachelor of science in biology</span>
+                <span class="edu-degree">
+                  bachelor of science in biology
+                </span>
               </div>
             </li>
           </ul>
 
         </div>
       </div>
+
     </div>
   </section>
 
@@ -311,45 +303,28 @@
     function setupSharedHeader() {
       fetch("header.html")
         .then((response) => {
-          if (!response.ok) {
-            throw new Error("Failed to load header.html");
-          }
+          if (!response.ok) throw new Error("Failed to load header.html");
           return response.text();
         })
         .then((html) => {
-          const container = document.getElementById("header-container");
-          container.innerHTML = html;
+          document.getElementById("header-container").innerHTML = html;
 
           const audio = document.getElementById("bg-music");
           const soundToggle = document.getElementById("sound-toggle");
           const aboutLink = document.querySelector('a[data-nav="about"]');
 
-          if (aboutLink) {
-            aboutLink.classList.add("active");
-          }
-
+          if (aboutLink) aboutLink.classList.add("active");
           if (!audio || !soundToggle) return;
 
           audio.volume = 0.025;
 
           function updateSoundButton() {
-            const isOn = !audio.paused;
-            soundToggle.textContent = isOn ? "sound: on" : "sound: off";
+            soundToggle.textContent = audio.paused ? "sound: off" : "sound: on";
           }
 
           function playAudio() {
-            if (!audio.paused) {
-              updateSoundButton();
-              return;
-            }
-
-            audio.play()
-              .then(() => {
-                updateSoundButton();
-              })
-              .catch(() => {
-                updateSoundButton();
-              });
+            if (!audio.paused) return updateSoundButton();
+            audio.play().then(updateSoundButton).catch(updateSoundButton);
           }
 
           function pauseAudio() {
@@ -357,14 +332,9 @@
             updateSoundButton();
           }
 
-          soundToggle.addEventListener("click", (event) => {
-            event.stopPropagation();
-
-            if (audio.paused) {
-              playAudio();
-            } else {
-              pauseAudio();
-            }
+          soundToggle.addEventListener("click", (e) => {
+            e.stopPropagation();
+            audio.paused ? playAudio() : pauseAudio();
           });
 
           document.addEventListener("click", playAudio, { once: true });
@@ -400,7 +370,7 @@
 
     async function runIntro() {
       await typeText(line1, "about me", 110);
-      await new Promise((resolve) => setTimeout(resolve, 250));
+      await new Promise(r => setTimeout(r, 250));
       aboutText.classList.add("show");
     }
 
