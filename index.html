@@ -10,6 +10,8 @@
       --text: #f5fbff;
       --muted: #b5c5d6;
       --accent: #79f0ff;
+      --transition-duration: 1000ms;
+      --transition-ease: cubic-bezier(0.76, 0, 0.24, 1);
     }
 
     * {
@@ -28,6 +30,8 @@
       background: black;
       overflow: hidden;
     }
+
+    /* ---------- background ---------- */
 
     .video-bg {
       position: fixed;
@@ -49,6 +53,8 @@
       z-index: -1;
     }
 
+    /* ---------- header ---------- */
+
     header {
       position: fixed;
       top: 0;
@@ -57,7 +63,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      z-index: 10;
+      z-index: 50;
     }
 
     .logo {
@@ -85,6 +91,7 @@
       color: var(--muted);
       font-size: 0.95rem;
       text-transform: lowercase;
+      transition: color 0.3s ease;
     }
 
     nav a:hover,
@@ -102,6 +109,7 @@
       font-size: 0.85rem;
       cursor: pointer;
       text-transform: lowercase;
+      transition: border-color 0.3s ease, color 0.3s ease;
     }
 
     .sound-btn:hover {
@@ -109,17 +117,42 @@
       color: var(--accent);
     }
 
-    .hero {
+    /* ---------- scroll panels ---------- */
+
+    .panels-viewport {
+      position: fixed;
+      inset: 0;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    .panels {
       height: 100vh;
+      width: 100%;
+      transform: translate3d(0, calc(var(--active, 0) * -100vh), 0);
+      transition: transform var(--transition-duration) var(--transition-ease);
+      will-change: transform;
+    }
+
+    .panels.no-transition {
+      transition: none;
+    }
+
+    .panel {
+      height: 100vh;
+      width: 100%;
       display: flex;
       align-items: center;
       justify-content: center;
-      text-align: center;
+      position: relative;
       padding: 0 1rem;
     }
 
+    /* ---------- hero ---------- */
+
     .hero-content {
       max-width: 800px;
+      text-align: center;
     }
 
     .eyebrow {
@@ -191,11 +224,415 @@
       font-size: 0.95rem;
       cursor: pointer;
       text-transform: lowercase;
+      transition: border-color 0.3s ease, color 0.3s ease;
     }
 
     .btn:hover {
       border-color: var(--accent);
       color: var(--accent);
+    }
+
+    .scroll-hint {
+      position: absolute;
+      bottom: 2.4rem;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.75rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--muted);
+      opacity: 0;
+      transition: opacity 1s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .scroll-hint.show {
+      opacity: 0.8;
+    }
+
+    .scroll-hint .arrow {
+      width: 1px;
+      height: 28px;
+      background: var(--muted);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .scroll-hint .arrow::after {
+      content: "";
+      position: absolute;
+      top: -100%;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--accent);
+      animation: scrollline 1.8s ease-in-out infinite;
+    }
+
+    @keyframes scrollline {
+      0% { top: -100%; }
+      60% { top: 100%; }
+      100% { top: 100%; }
+    }
+
+    /* ---------- about ---------- */
+
+    .about-content {
+      width: 100%;
+      max-width: 900px;
+      max-height: calc(100vh - 2rem);
+      margin: 0 auto;
+      padding: 6rem 0 1.5rem;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.6rem;
+      overflow-y: auto;
+      scrollbar-width: none;
+    }
+
+    .about-content::-webkit-scrollbar {
+      display: none;
+    }
+
+    .about-main {
+      background: rgba(0, 0, 0, 0.22);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      padding: 2rem;
+      backdrop-filter: blur(3px);
+    }
+
+    .about-side {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .side-box {
+      background: rgba(0, 0, 0, 0.22);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      padding: 1.6rem;
+      backdrop-filter: blur(3px);
+    }
+
+    .about-text p {
+      font-size: 1rem;
+      line-height: 1.8;
+      color: var(--text);
+      margin-bottom: 1rem;
+      max-width: 62ch;
+      text-transform: lowercase;
+    }
+
+    .box-title {
+      color: var(--accent);
+      font-size: 0.8rem;
+      letter-spacing: 0.2em;
+      margin-bottom: 1.2rem;
+      text-transform: uppercase;
+    }
+
+    .edu-list {
+      list-style: none;
+    }
+
+    .edu-item {
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+      margin-bottom: 1.6rem;
+    }
+
+    .edu-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .edu-logo {
+      width: 250px;
+      height: 100px;
+      object-fit: contain;
+      filter: brightness(0.9) contrast(1.1);
+      flex-shrink: 0;
+    }
+
+    .edu-school {
+      display: block;
+      font-size: 1rem;
+      color: var(--text);
+      text-transform: lowercase;
+      margin-bottom: 0.25rem;
+    }
+
+    .edu-degree {
+      display: block;
+      font-size: 0.9rem;
+      color: var(--muted);
+      text-transform: lowercase;
+      line-height: 1.4;
+    }
+
+    /* ---------- resume ---------- */
+
+    .resume-content {
+      width: 100%;
+      max-width: 900px;
+      max-height: calc(100vh - 2rem);
+      margin: 0 auto;
+      padding: 6rem 0 1.5rem;
+      overflow-y: auto;
+      scrollbar-width: none;
+    }
+
+    .resume-content::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* ---------- reveal animations ---------- */
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    .reveal.in-view {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .about-main.reveal { transition-delay: 0.05s; }
+    .about-side .side-box.reveal { transition-delay: 0.25s; }
+
+    /* ---------- landing / dna ---------- */
+
+    .landing {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2.5rem;
+      background: #000;
+      cursor: pointer;
+      transition: opacity 1.15s ease;
+    }
+
+    .landing:focus-visible {
+      outline: 1px solid var(--accent);
+      outline-offset: -10px;
+    }
+
+    .landing.unwind {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .dna-wrap {
+      width: min(72vw, 380px);
+      height: min(72vh, 720px);
+    }
+
+    #dna-svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    #dna-track {
+      animation: dnaScroll 6s linear infinite;
+    }
+
+    @keyframes dnaScroll {
+      from { transform: translateY(0); }
+      to { transform: translateY(-160px); }
+    }
+
+    .dna-group {
+      transition: transform 1.15s var(--transition-ease), opacity 1.15s ease;
+    }
+
+    .dna-strand {
+      fill: none;
+      stroke: var(--accent);
+      stroke-width: 3;
+      stroke-linecap: round;
+    }
+
+    .dna-right .dna-strand {
+      stroke: var(--muted);
+    }
+
+    .dna-rung {
+      stroke: rgba(255, 255, 255, 0.25);
+      stroke-width: 1.5;
+    }
+
+    .dna-bp {
+      fill: var(--accent);
+    }
+
+    .dna-right .dna-bp {
+      fill: var(--muted);
+    }
+
+    .landing.unwind #dna-track {
+      animation-play-state: paused;
+    }
+
+    .landing.unwind .dna-left {
+      transform: translateX(-60vw);
+      opacity: 0;
+    }
+
+    .landing.unwind .dna-right {
+      transform: translateX(60vw);
+      opacity: 0;
+    }
+
+    .landing-prompt {
+      font-size: 0.85rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--muted);
+      animation: pulsePrompt 2s ease-in-out infinite;
+    }
+
+    @keyframes pulsePrompt {
+      0%, 100% { opacity: 0.5; }
+      50% { opacity: 1; }
+    }
+
+    .landing.unwind .landing-prompt {
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+
+    /* ---------- custom cursor ---------- */
+
+    .cursor-glow {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 19vw;
+      height: 19vw;
+      max-width: 310px;
+      max-height: 310px;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 40;
+      transform: translate(-50%, -50%);
+      background: radial-gradient(circle, rgba(121, 240, 255, 0.16), rgba(121, 240, 255, 0.05) 45%, transparent 72%);
+      mix-blend-mode: screen;
+      opacity: 0;
+      transition: opacity 0.6s ease;
+      display: none;
+    }
+
+    body.has-custom-cursor .cursor-glow {
+      display: block;
+      opacity: 1;
+    }
+
+    .cursor-dot,
+    .cursor-ring {
+      position: fixed;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      border-radius: 50%;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+    }
+
+    .cursor-dot {
+      width: 6px;
+      height: 6px;
+      background: var(--accent);
+      transition: opacity 0.2s ease, background 0.3s ease;
+    }
+
+    .cursor-ring {
+      width: 38px;
+      height: 38px;
+      border: 1px solid var(--accent);
+      opacity: 0.55;
+      transition: width 0.25s ease, height 0.25s ease, opacity 0.25s ease,
+        border-color 0.25s ease, background 0.25s ease;
+    }
+
+    .cursor-ring.hover {
+      width: 70px;
+      height: 70px;
+      opacity: 1;
+      border-color: var(--text);
+      background: rgba(121, 240, 255, 0.08);
+    }
+
+    .cursor-ring.click {
+      width: 28px;
+      height: 28px;
+    }
+
+    body.has-custom-cursor,
+    body.has-custom-cursor a,
+    body.has-custom-cursor button,
+    body.has-custom-cursor .landing {
+      cursor: none;
+    }
+
+    /* ---------- reduced motion fallback ---------- */
+
+    body.no-motion {
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+
+    body.no-motion .panels-viewport {
+      position: relative;
+    }
+
+    body.no-motion .panels {
+      height: auto;
+      transform: none !important;
+      transition: none !important;
+    }
+
+    body.no-motion .panel {
+      height: auto;
+      min-height: 100vh;
+    }
+
+    body.no-motion .about-content {
+      max-height: none;
+      overflow-y: visible;
+    }
+
+    body.no-motion .reveal {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+
+    body.no-motion #dna-track {
+      animation: none;
+    }
+
+    body.no-motion .landing-prompt {
+      animation: none;
+      opacity: 0.8;
+    }
+
+    body.no-motion .dna-group {
+      transition: opacity 0.6s ease;
+    }
+
+    body.no-motion .landing.unwind .dna-left,
+    body.no-motion .landing.unwind .dna-right {
+      transform: none;
     }
 
     @media (max-width: 768px) {
@@ -215,97 +652,246 @@
         flex-wrap: wrap;
         justify-content: center;
       }
+
+      .about-content,
+      .resume-content {
+        max-height: calc(100vh - 1rem);
+        padding-top: 9rem;
+      }
+
+      .edu-logo {
+        width: 150px;
+        height: 70px;
+      }
     }
   </style>
 </head>
 <body>
 
-  <div id="header-container"></div>
+  <video class="video-bg" id="site-video" autoplay muted loop playsinline aria-hidden="true">
+    <source src="elements/videoplayback.mp4" type="video/mp4">
+  </video>
 
-  <section class="hero">
-    <div class="hero-content">
-      <p class="eyebrow" id="eyebrow">life × technology</p>
-      <h1 id="line1"></h1>
-      <h2 id="line2"></h2>
+  <audio id="bg-music" loop preload="auto">
+    <source src="elements/warmpop.mp3" type="audio/mpeg">
+  </audio>
 
-      <div class="button-row" id="button-row">
-        <a class="btn" href="about.html">who am i</a>
-        <a class="btn" href="resume.html">what do i do</a>
-      </div>
+  <div class="overlay"></div>
+
+  <header>
+    <a class="logo" href="#hero" data-nav="hero">nbaron</a>
+
+    <nav>
+      <ul>
+        <li><a href="#about" data-nav="about">about</a></li>
+        <li><a href="#resume" data-nav="resume">resume</a></li>
+      </ul>
+
+      <button class="sound-btn" id="sound-toggle" type="button" aria-label="toggle background music">
+        sound: off
+      </button>
+    </nav>
+  </header>
+
+  <div class="landing" id="landing" role="button" tabindex="0" aria-label="enter site">
+    <div class="dna-wrap">
+      <svg id="dna-svg" viewBox="0 0 460 640" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+        <g id="dna-track"></g>
+      </svg>
     </div>
-  </section>
+    <p class="landing-prompt">click to enter</p>
+  </div>
+
+  <div class="panels-viewport">
+    <div class="panels" id="panels">
+
+      <section class="panel" id="hero" data-nav="hero">
+        <div class="hero-content">
+          <p class="eyebrow" id="eyebrow">life × technology</p>
+          <h1 id="line1"></h1>
+          <h2 id="line2"></h2>
+
+          <div class="button-row" id="button-row">
+            <a class="btn" href="#about" data-nav="about">who am i</a>
+            <a class="btn" href="#resume" data-nav="resume">what do i do</a>
+          </div>
+        </div>
+
+        <div class="scroll-hint" id="scroll-hint">
+          <span>scroll</span>
+          <span class="arrow"></span>
+        </div>
+      </section>
+
+      <section class="panel" id="about" data-nav="about">
+        <div class="about-content scroll-area">
+
+          <!-- ABOUT -->
+          <div class="about-main reveal">
+            <h1>about me</h1>
+
+            <div class="about-text">
+              <p>
+                i'm a software engineer focused on designing and
+                building systems that turn complex data into useful
+                outcomes. i'm especially passionate about raising
+                shareholder value.
+              </p>
+              <p>
+                i've previously worked in the biotech industry and
+                in scientific research.
+              </p>
+            </div>
+          </div>
+
+          <!-- EDUCATION BELOW -->
+          <div class="about-side">
+            <div class="side-box reveal">
+              <p class="box-title">education</p>
+
+              <ul class="edu-list">
+                <li class="edu-item">
+                  <img src="elements/upennlogo.png" class="edu-logo" alt="University of Pennsylvania logo">
+                  <div>
+                    <span class="edu-school">university of pennsylvania</span>
+                    <span class="edu-degree">
+                      master of applied science in computer science
+                    </span>
+                  </div>
+                </li>
+
+                <li class="edu-item">
+                  <img src="elements/umainelogo.png" class="edu-logo" alt="University of Maine logo">
+                  <div>
+                    <span class="edu-school">university of maine</span>
+                    <span class="edu-degree">
+                      bachelor of science in biology
+                    </span>
+                  </div>
+                </li>
+              </ul>
+
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <section class="panel" id="resume" data-nav="resume">
+        <div class="resume-content scroll-area reveal">
+          <!-- resume content coming soon -->
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <div class="cursor-glow" id="cursor-glow"></div>
+  <div class="cursor-ring" id="cursor-ring"></div>
+  <div class="cursor-dot" id="cursor-dot"></div>
 
   <script>
   const line1 = document.getElementById("line1");
   const line2 = document.getElementById("line2");
   const eyebrow = document.getElementById("eyebrow");
   const buttonRow = document.getElementById("button-row");
+  const scrollHint = document.getElementById("scroll-hint");
+  const panelsEl = document.getElementById("panels");
+  const panels = Array.from(document.querySelectorAll(".panel"));
 
-  function setupSharedHeader() {
-    fetch("header.html")
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Failed to load header.html");
-        }
-        return response.text();
-      })
-      .then((html) => {
-        const container = document.getElementById("header-container");
-        container.innerHTML = html;
+  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const isFinePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
 
-        const audio = document.getElementById("bg-music");
-        const soundToggle = document.getElementById("sound-toggle");
+  let entered = false;
 
-        if (!audio || !soundToggle) return;
+  if (prefersReducedMotion) {
+    document.body.classList.add("no-motion");
+  }
 
-        audio.volume = 0.025;
+  /* ---------------- nav ---------------- */
 
-        function updateSoundButton() {
-          const isOn = !audio.paused;
-          soundToggle.textContent = isOn ? "sound: on" : "sound: off";
-          sessionStorage.setItem("musicEnabled", isOn ? "true" : "false");
-        }
+  function setupNav() {
+    const navLinks = Array.from(document.querySelectorAll('a[data-nav]'));
 
-        function playAudio() {
-          if (!audio.paused) {
-            updateSoundButton();
-            return;
-          }
+    navLinks.forEach((link) => {
+      const target = link.getAttribute("data-nav");
 
-          audio.play()
-            .then(() => {
-              updateSoundButton();
-            })
-            .catch(() => {
-              updateSoundButton();
-            });
-        }
-
-        function pauseAudio() {
-          audio.pause();
-          updateSoundButton();
-        }
-
-        soundToggle.addEventListener("click", (event) => {
-          event.stopPropagation();
-
-          if (audio.paused) {
-            playAudio();
-          } else {
-            pauseAudio();
+      if (target === "hero" || target === "about" || target === "resume") {
+        link.addEventListener("click", (event) => {
+          if (link.getAttribute("href").includes("#")) {
+            event.preventDefault();
+            const index = panels.findIndex((panel) => panel.id === target);
+            if (index !== -1) goToPanel(index);
           }
         });
+      }
+    });
 
-        document.addEventListener("click", playAudio, { once: true });
-        document.addEventListener("keydown", playAudio, { once: true });
-        document.addEventListener("touchstart", playAudio, { once: true });
-
-        updateSoundButton();
-      })
-      .catch((error) => {
-        console.error("Shared header failed to load:", error);
-      });
+    updateActiveNav();
   }
+
+  function updateActiveNav() {
+    const current = panels[currentIndex];
+    if (!current) return;
+
+    document.querySelectorAll('a[data-nav]').forEach((link) => {
+      link.classList.toggle("active", link.getAttribute("data-nav") === current.dataset.nav);
+    });
+  }
+
+  let bgAudio = null;
+  let soundToggle = null;
+
+  function updateSoundButton() {
+    if (!bgAudio || !soundToggle) return;
+
+    const isOn = !bgAudio.paused;
+    soundToggle.textContent = isOn ? "sound: on" : "sound: off";
+    sessionStorage.setItem("musicEnabled", isOn ? "true" : "false");
+  }
+
+  function startMusic() {
+    if (!bgAudio) return;
+
+    if (!bgAudio.paused) {
+      updateSoundButton();
+      return;
+    }
+
+    bgAudio.play()
+      .then(updateSoundButton)
+      .catch(updateSoundButton);
+  }
+
+  function pauseMusic() {
+    if (!bgAudio) return;
+
+    bgAudio.pause();
+    updateSoundButton();
+  }
+
+  function setupAudio() {
+    bgAudio = document.getElementById("bg-music");
+    soundToggle = document.getElementById("sound-toggle");
+
+    if (!bgAudio || !soundToggle) return;
+
+    bgAudio.volume = 0.025;
+
+    soundToggle.addEventListener("click", (event) => {
+      event.stopPropagation();
+
+      if (bgAudio.paused) {
+        startMusic();
+      } else {
+        pauseMusic();
+      }
+    });
+
+    updateSoundButton();
+  }
+
+  /* ---------------- typing intro ---------------- */
 
   function typeText(element, text, speed = 90) {
     return new Promise((resolve) => {
@@ -339,11 +925,311 @@
     await new Promise((resolve) => setTimeout(resolve, 900));
 
     buttonRow.classList.add("show");
+    await new Promise((resolve) => setTimeout(resolve, 400));
+
+    scrollHint.classList.add("show");
+  }
+
+  /* ---------------- panel / scroll controller ---------------- */
+
+  let currentIndex = 0;
+  let isAnimating = false;
+  const animationLock = 1100;
+
+  function revealPanel(index) {
+    const panel = panels[index];
+    panel.querySelectorAll(".reveal").forEach((el) => el.classList.add("in-view"));
+  }
+
+  function unrevealPanel(index) {
+    const panel = panels[index];
+    panel.querySelectorAll(".reveal").forEach((el) => el.classList.remove("in-view"));
+  }
+
+  function goToPanel(index) {
+    index = Math.max(0, Math.min(panels.length - 1, index));
+
+    if (index === currentIndex || isAnimating) return;
+
+    if (prefersReducedMotion) {
+      panels[index].scrollIntoView({ behavior: "smooth" });
+      currentIndex = index;
+      updateActiveNav();
+      revealPanel(index);
+      return;
+    }
+
+    isAnimating = true;
+
+    if (index < currentIndex) {
+      unrevealPanel(currentIndex);
+    }
+
+    currentIndex = index;
+    panelsEl.style.setProperty("--active", currentIndex);
+
+    setTimeout(() => {
+      revealPanel(currentIndex);
+    }, animationLock * 0.35);
+
+    updateActiveNav();
+
+    setTimeout(() => {
+      isAnimating = false;
+    }, animationLock);
+  }
+
+  function handleWheel(event) {
+    if (!entered || prefersReducedMotion) return;
+
+    const activePanel = panels[currentIndex];
+    const scrollable = activePanel.querySelector(".scroll-area");
+
+    if (scrollable) {
+      const goingDown = event.deltaY > 0;
+      const atBottom = scrollable.scrollHeight - scrollable.clientHeight - scrollable.scrollTop < 1;
+      const atTop = scrollable.scrollTop < 1;
+
+      if (goingDown && !atBottom) return;
+      if (!goingDown && !atTop) return;
+    }
+
+    event.preventDefault();
+
+    if (isAnimating) return;
+
+    if (event.deltaY > 0) {
+      goToPanel(currentIndex + 1);
+    } else if (event.deltaY < 0) {
+      goToPanel(currentIndex - 1);
+    }
+  }
+
+  let touchStartY = null;
+
+  function handleTouchStart(event) {
+    touchStartY = event.touches[0].clientY;
+  }
+
+  function handleTouchMove(event) {
+    if (!entered || prefersReducedMotion || touchStartY === null) return;
+
+    const activePanel = panels[currentIndex];
+    const scrollable = activePanel.querySelector(".scroll-area");
+    const deltaY = touchStartY - event.touches[0].clientY;
+
+    if (scrollable) {
+      const goingDown = deltaY > 0;
+      const atBottom = scrollable.scrollHeight - scrollable.clientHeight - scrollable.scrollTop < 1;
+      const atTop = scrollable.scrollTop < 1;
+
+      if (goingDown && !atBottom) return;
+      if (!goingDown && !atTop) return;
+    }
+
+    if (Math.abs(deltaY) < 60) return;
+
+    event.preventDefault();
+
+    if (isAnimating) return;
+
+    if (deltaY > 0) {
+      goToPanel(currentIndex + 1);
+    } else {
+      goToPanel(currentIndex - 1);
+    }
+
+    touchStartY = null;
+  }
+
+  function handleKeydown(event) {
+    if (!entered || prefersReducedMotion) return;
+
+    if (["ArrowDown", "PageDown"].includes(event.key)) {
+      event.preventDefault();
+      goToPanel(currentIndex + 1);
+    } else if (["ArrowUp", "PageUp"].includes(event.key)) {
+      event.preventDefault();
+      goToPanel(currentIndex - 1);
+    }
+  }
+
+  function initScrollController() {
+    window.addEventListener("wheel", handleWheel, { passive: false });
+    window.addEventListener("touchstart", handleTouchStart, { passive: true });
+    window.addEventListener("touchmove", handleTouchMove, { passive: false });
+    window.addEventListener("keydown", handleKeydown);
+
+    if (window.location.hash) {
+      const index = panels.findIndex((panel) => `#${panel.id}` === window.location.hash);
+      if (index !== -1) {
+        currentIndex = index;
+        revealPanel(currentIndex);
+      }
+    }
+
+    panelsEl.classList.add("no-transition");
+    panelsEl.style.setProperty("--active", currentIndex);
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        panelsEl.classList.remove("no-transition");
+      });
+    });
+  }
+
+  /* ---------------- custom cursor ---------------- */
+
+  function initCustomCursor() {
+    if (!isFinePointer || prefersReducedMotion) return;
+
+    document.body.classList.add("has-custom-cursor");
+
+    const dot = document.getElementById("cursor-dot");
+    const ring = document.getElementById("cursor-ring");
+    const glow = document.getElementById("cursor-glow");
+
+    let mouseX = window.innerWidth / 2;
+    let mouseY = window.innerHeight / 2;
+    let ringX = mouseX;
+    let ringY = mouseY;
+    let glowX = mouseX;
+    let glowY = mouseY;
+
+    window.addEventListener("mousemove", (event) => {
+      mouseX = event.clientX;
+      mouseY = event.clientY;
+      dot.style.transform = `translate(${mouseX}px, ${mouseY}px) translate(-50%, -50%)`;
+    });
+
+    document.addEventListener("mousedown", () => ring.classList.add("click"));
+    document.addEventListener("mouseup", () => ring.classList.remove("click"));
+
+    document.addEventListener("mouseover", (event) => {
+      if (event.target.closest("a, button, .btn, .landing")) {
+        ring.classList.add("hover");
+      }
+    });
+
+    document.addEventListener("mouseout", (event) => {
+      if (event.target.closest("a, button, .btn, .landing")) {
+        ring.classList.remove("hover");
+      }
+    });
+
+    function animateRing() {
+      ringX += (mouseX - ringX) * 0.18;
+      ringY += (mouseY - ringY) * 0.18;
+      ring.style.transform = `translate(${ringX}px, ${ringY}px) translate(-50%, -50%)`;
+
+      glowX += (mouseX - glowX) * 0.08;
+      glowY += (mouseY - glowY) * 0.08;
+      glow.style.transform = `translate(${glowX}px, ${glowY}px) translate(-50%, -50%)`;
+
+      requestAnimationFrame(animateRing);
+    }
+
+    requestAnimationFrame(animateRing);
+  }
+
+  /* ---------------- dna helix ---------------- */
+
+  function buildDNA() {
+    const track = document.getElementById("dna-track");
+    if (!track) return;
+
+    const width = 460;
+    const centerX = width / 2;
+    const amplitude = 90;
+    const period = 160;
+    const drawHeight = period * 5;
+    const step = 4;
+    const rungStep = 16;
+
+    let leftPath = "";
+    let rightPath = "";
+    let leftExtras = "";
+    let rightExtras = "";
+
+    for (let y = 0; y <= drawHeight; y += step) {
+      const phase = (y / period) * Math.PI * 2;
+      const xLeft = (centerX + Math.sin(phase) * amplitude).toFixed(2);
+      const xRight = (centerX - Math.sin(phase) * amplitude).toFixed(2);
+
+      leftPath += `${y === 0 ? "M" : "L"}${xLeft},${y} `;
+      rightPath += `${y === 0 ? "M" : "L"}${xRight},${y} `;
+
+      if (y % rungStep === 0) {
+        leftExtras += `<line class="dna-rung" x1="${centerX}" y1="${y}" x2="${xLeft}" y2="${y}" /><circle class="dna-bp" cx="${xLeft}" cy="${y}" r="3.5" />`;
+        rightExtras += `<line class="dna-rung" x1="${centerX}" y1="${y}" x2="${xRight}" y2="${y}" /><circle class="dna-bp" cx="${xRight}" cy="${y}" r="3.5" />`;
+      }
+    }
+
+    track.innerHTML = `
+      <g class="dna-group dna-left">
+        <path class="dna-strand" d="${leftPath}"></path>
+        ${leftExtras}
+      </g>
+      <g class="dna-group dna-right">
+        <path class="dna-strand" d="${rightPath}"></path>
+        ${rightExtras}
+      </g>
+    `;
+  }
+
+  /* ---------------- landing ---------------- */
+
+  function showHeroStatic() {
+    scrollHint.classList.add("show");
+    eyebrow.classList.add("show");
+    buttonRow.classList.add("show");
+    line1.textContent = "i'm nick";
+    line2.textContent = "welcome to my website";
+  }
+
+  function initLanding() {
+    const landing = document.getElementById("landing");
+    if (!landing) return;
+
+    let triggered = false;
+
+    function enter() {
+      if (triggered) return;
+      triggered = true;
+
+      entered = true;
+      landing.classList.add("unwind");
+      startMusic();
+
+      const delay = prefersReducedMotion ? 500 : 1150;
+
+      setTimeout(() => {
+        landing.style.display = "none";
+
+        if (currentIndex === 0) {
+          runIntro();
+        } else {
+          showHeroStatic();
+        }
+      }, delay);
+    }
+
+    landing.addEventListener("click", enter);
+    landing.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        enter();
+      }
+    });
   }
 
   window.addEventListener("load", () => {
-    setupSharedHeader();
-    runIntro();
+    setupNav();
+    setupAudio();
+    buildDNA();
+    initScrollController();
+    initCustomCursor();
+    initLanding();
   });
 </script>
 
